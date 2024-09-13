@@ -4,6 +4,8 @@ import json
 import os
 import hashlib
 from urllib.parse import urlparse, parse_qs
+import urllib.error
+import urllib.request
 
 file_list=[]
 
@@ -32,7 +34,7 @@ def preUpload(md5_hash,filename,filesize):
       "driveId": 0,
       "etag": md5_hash.hexdigest(),
       "fileName": str(filename),
-      "parentFileId": 0,
+      "parentFileId": 8986417,
       "size": filesize,
       "type": 0,
       "RequestSource": None,
@@ -226,13 +228,19 @@ def uploader(file_path):
 
 
 def downloader(url, local_filename):
-    with requests.get(url, stream=True) as r:
-        r.raise_for_status()
-        with open(local_filename, 'wb') as f:
-            for chunk in r.iter_content(chunk_size=1024*1024):
-                if chunk:
-                    f.write(chunk)
-                    f.flush()
+    try:
+       urllib.request.urlretrieve(url, local_filename)
+       print("文件下载成功!")
+       return 0
+    except urllib.error.HTTPError as e:
+       print("HTTPError:", str(e))
+       return 1
+    except urllib.error.URLError as e:
+       print("URLError:", str(e))
+       return 2
+    except Exception as e:
+       print("发生异常：", str(e))
+       return 3
 
 def threadWorker(f,lock):
     url=""
@@ -257,7 +265,14 @@ def threadWorker(f,lock):
                     print(f'Error occurred: {e}')
                 continue
             elif url!='' and name!='':
-                downloader(url,os.getcwd()+'\\'+name)
+                while True:
+                    rcode=downloader(url,os.getcwd()+'\\'+name)
+                    if 0==rcode:
+                        break
+                    elif 1==rcode:
+                        continue
+                    else:
+                        break   
                 with lock:
                     file_list.append(os.getcwd()+'\\'+name)
                 url=""
@@ -284,7 +299,7 @@ def threadWorker(f,lock):
 #local_filename = 'large_video.mp4'
 #downloader(url, local_filename)
 thread_list=[]
-with open(os.getcwd()+'\\info.txt', "r",encoding='utf-8') as f:
+with open(os.getcwd()+'\\info.txt',"r") as f:
     for i in range(1,3):
         t=threading.Thread(target=threadWorker,args=(f,threading.Lock()))
         thread_list.append(t)
