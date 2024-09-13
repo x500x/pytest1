@@ -284,7 +284,7 @@ def threadWorker(f,lock):
 #local_filename = 'large_video.mp4'
 #downloader(url, local_filename)
 thread_list=[]
-with open(os.getcwd()+'\\info.txt',"r") as f:
+with open(os.getcwd()+'\\info.txt', "r",encoding='utf-8') as f:
     for i in range(1,3):
         t=threading.Thread(target=threadWorker,args=(f,threading.Lock()))
         thread_list.append(t)
