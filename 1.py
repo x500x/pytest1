@@ -281,7 +281,7 @@ def threadWorker(f,lock):
                 retry=0
                 while retry<6:
                     retry+=1
-                    rcode=downloader(url,os.getcwd()+'\\'+name)
+                    rcode = downloader(url, os.path.join(os.getcwd(), name))
                     if 0==rcode:
                         break
                     elif 1==rcode:
@@ -289,7 +289,7 @@ def threadWorker(f,lock):
                     else:
                         break   
                 with lock:
-                    file_list.append(os.getcwd()+'\\'+name)
+                    file_list.append(os.path.join(os.getcwd(), name))
                 url=""
                 name=""
                 break
