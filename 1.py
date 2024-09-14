@@ -230,6 +230,9 @@ def uploader(file_path):
 
 
 def downloader(url, local_filename):
+    opener=urllib.request.build_opener()
+    opener.addheaders=[('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
+    urllib.request.install_opener(opener)
     try:
        urllib.request.urlretrieve(url, local_filename)
        print("文件下载成功!")
@@ -267,7 +270,9 @@ def threadWorker(f,lock):
                     print(f'Error occurred: {e}')
                 continue
             elif url!='' and name!='':
-                while True:
+                retry=0
+                while retry<6:
+                    retry+=1
                     rcode=downloader(url,os.getcwd()+'\\'+name)
                     if 0==rcode:
                         break
@@ -301,7 +306,7 @@ def threadWorker(f,lock):
 #local_filename = 'large_video.mp4'
 #downloader(url, local_filename)
 thread_list=[]
-with open(os.getcwd()+'\\info.txt', "r") as f:
+with open(os.getcwd()+'\\info.txt',"r") as f:
     for i in range(1,3):
         t=threading.Thread(target=threadWorker,args=(f,threading.Lock()))
         thread_list.append(t)
@@ -312,3 +317,4 @@ with open(os.getcwd()+'\\info.txt', "r") as f:
 
 print('all task finished!!!!!')
 #uploader('/data/user/0/coding.yu.pythoncompiler.new/files/default.py')
+    
