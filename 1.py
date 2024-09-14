@@ -225,8 +225,13 @@ def uploader(file_path):
                     upload_info=json.loads(GetUploadUrl(start,start+1,upload_data))
                     presignedUrl=upload_info['data']['presignedUrls']
                     #print('presignedUrls::'+presignedUrl[str(start)])
-                    while 0!=PutFileChunk(presignedUrl[str(start)],byte):
+                    retry=0
+                    while 0!=PutFileChunk(presignedUrl[str(start)],byte) and retry<6:
+                        retry+=1
                         presignedUrl=json.loads(GetUploadUrl(start,start+1,upload_data))['data']['presignedUrls']
+                    if retry>=6:
+                        print("err")
+                        return ""
                     start+=1
                     
             CompleteUpload(upload_data,filesize)
