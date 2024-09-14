@@ -243,7 +243,7 @@ def downloader(url, local_filename):
     urllib.request.install_opener(opener)
     try:
        urllib.request.urlretrieve(url, local_filename)
-       print("文件下载成功!")
+       print("file download success")
        return 0
     except urllib.error.HTTPError as e:
        print("HTTPError:", str(e))
@@ -252,7 +252,7 @@ def downloader(url, local_filename):
        print("URLError:", str(e))
        return 2
     except Exception as e:
-       print("发生异常：", str(e))
+       print("err：", str(e))
        return 3
 
 def threadWorker(f,lock):
