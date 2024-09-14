@@ -9,6 +9,8 @@ from urllib.parse import urlparse, parse_qs
 import urllib.error
 import urllib.request
 import random
+import sys
+import io
 
 file_list=[]
 
@@ -281,7 +283,7 @@ def threadWorker(f,lock):
                 retry=0
                 while retry<6:
                     retry+=1
-                    rcode = downloader(url, unicode((os.path.join(os.getcwd(), name)).strip().replace('\n', ''),"utf-8"))
+                    rcode = downloader(url, (os.path.join(os.getcwd(), name)).strip().replace('\n', ''))
                     if 0==rcode:
                         break
                     elif 1==rcode:
@@ -289,7 +291,7 @@ def threadWorker(f,lock):
                     else:
                         break   
                 with lock:
-                    file_list.append(unicode((os.path.join(os.getcwd(), name)).strip().replace('\n', ''),"utf-8"))
+                    file_list.append((os.path.join(os.getcwd(), name)).strip().replace('\n', ''))
                 url=""
                 name=""
                 break
@@ -314,6 +316,7 @@ def threadWorker(f,lock):
 #local_filename = 'large_video.mp4'
 #downloader(url, local_filename)
 thread_list=[]
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 with open(os.getcwd()+'\\info.txt',"r", encoding='utf-8') as f:
     for i in range(1,3):
         t=threading.Thread(target=threadWorker,args=(f,threading.Lock()))
