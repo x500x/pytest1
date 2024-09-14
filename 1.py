@@ -167,18 +167,21 @@ def CheckUploadList(upload_data,filepath):
         return info
     with open(filepath,"rb") as f:
         for obj in json_obj:
-            info['nowPartNumber'] = obj.get('PartNumber')
-            info['nowsize'] += obj.get('Size')
             ETag = obj.get('ETag')
-            print(f"PartNumber: {info['nowPartNumber']}, Size: {obj.get('Size')},ETag: {ETag}")
-            print('nowsize='+str(info['nowsize']))
-            byte=f.read(obj.get('Size'))
+            byte=f.read(int(obj.get('Size')))
             md5_hash = hashlib.md5()
             md5_hash.update(byte)
             if ETag!="\""+md5_hash.hexdigest()+"\"":
-                presignedUrl=json.loads(GetUploadUrl(obj.get('PartNumber'),obj.get('PartNumber')+1,upload_data))['data']['presignedUrls']
-                while 0!=PutFileChunk(presignedUrl[str(obj.get('PartNumber'))],byte):
-                    presignedUrl=json.loads(GetUploadUrl(obj.get('PartNumber'),obj.get('PartNumber')+1,upload_data))['data']['presignedUrls']
+                presignedUrl=json.loads(GetUploadUrl(int(obj.get('PartNumber')),int(obj.get('PartNumber'))+1,upload_data))['data']['presignedUrls']
+                retry=0
+                while 0!=PutFileChunk(presignedUrl[str(int(obj.get('PartNumber')))],byte) and retry<6:
+                    presignedUrl=json.loads(GetUploadUrl(int(obj.get('PartNumber')),int(obj.get('PartNumber'))+1,upload_data))['data']['presignedUrls']
+                if retry>=6:
+                    break
+            info['nowPartNumber'] = int(obj.get('PartNumber'))
+            info['nowsize'] += int(obj.get('Size'))
+            print(f"PartNumber: {obj.get('PartNumber')}, Size: {obj.get('Size')},ETag: {ETag}")
+            print('nowsize='+str(info['nowsize']))
     info['nowPartNumber']+=1
     return info
 
@@ -331,6 +334,8 @@ with open(os.getcwd()+'\\info.txt',"r", encoding='utf-8') as f:
     for t in thread_list:
         t.join()
 
+for t in thread_list:
+        t.join()
 print('all task finished!!!!!')
 #uploader('/data/user/0/coding.yu.pythoncompiler.new/files/default.py')
     
