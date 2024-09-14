@@ -252,7 +252,7 @@ def downloader(url, local_filename):
        print("URLError:", str(e))
        return 2
     except Exception as e:
-       print("err：", str(e))
+       print("err:", str(e))
        return 3
 
 def threadWorker(f,lock):
