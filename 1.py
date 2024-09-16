@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
+#需要在同级目录下提供info.txt(奇数行url,偶数行:文件名),需定期更换123token
 import requests
 import threading
 import json
@@ -297,7 +298,7 @@ def threadWorker(f,lock):
                     elif 1==rcode:
                         continue
                     else:
-                        break   
+                        continue
                 with lock:
                     file_list.append((os.path.join(os.getcwd(), name)).strip().replace('\n', ''))
                 url=""
