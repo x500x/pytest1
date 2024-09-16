@@ -326,7 +326,7 @@ def threadWorker(f,lock):
 thread_list=[]
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 with open(os.getcwd()+'\\info.txt',"r", encoding='utf-8') as f:
-    for i in range(1,3):
+    for i in range(1,6):
         t=threading.Thread(target=threadWorker,args=(f,threading.Lock()))
         thread_list.append(t)
         t.start()
