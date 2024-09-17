@@ -40,7 +40,7 @@ def preUpload(md5_hash,filename,filesize):
       "driveId": 0,
       "etag": md5_hash.hexdigest(),
       "fileName": str(filename),
-      "parentFileId": 8986417,
+      "parentFileId": 9117418,
       "size": filesize,
       "type": 0,
       "RequestSource": None,
