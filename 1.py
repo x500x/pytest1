@@ -294,13 +294,13 @@ def threadWorker(f,lock):
                     retry+=1
                     rcode = downloader(url, (os.path.join(os.getcwd(), name)).strip().replace('\n', ''))
                     if 0==rcode:
+                        with lock:
+                            file_list.append((os.path.join(os.getcwd(), name)).strip().replace('\n', ''))
+                        url=""
+                        name=""
                         break
-                    elif 1==rcode:
-                        continue
                     else:
                         continue
-                with lock:
-                    file_list.append((os.path.join(os.getcwd(), name)).strip().replace('\n', ''))
                 url=""
                 name=""
                 break
