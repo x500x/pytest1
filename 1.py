@@ -40,7 +40,7 @@ def preUpload(md5_hash,filename,filesize):
       "driveId": 0,
       "etag": md5_hash.hexdigest(),
       "fileName": str(filename),
-      "parentFileId": 9117418,
+      "parentFileId": 9179858,
       "size": filesize,
       "type": 0,
       "RequestSource": None,
@@ -290,7 +290,7 @@ def threadWorker(f,lock):
                 continue
             elif url!='' and name!='':
                 retry=0
-                while retry<6:
+                while retry<3:
                     retry+=1
                     rcode = downloader(url, (os.path.join(os.getcwd(), name)).strip().replace('\n', ''))
                     if 0==rcode:
