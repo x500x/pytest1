@@ -40,7 +40,7 @@ def preUpload(md5_hash,filename,filesize):
       "driveId": 0,
       "etag": md5_hash.hexdigest(),
       "fileName": str(filename),
-      "parentFileId": 9179858,
+      "parentFileId": 9204596,
       "size": filesize,
       "type": 0,
       "RequestSource": None,
@@ -327,7 +327,7 @@ def threadWorker(f,lock):
 thread_list=[]
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 with open(os.getcwd()+'\\info.txt',"r", encoding='utf-8') as f:
-    for i in range(1,6):
+    for i in range(1,11):
         t=threading.Thread(target=threadWorker,args=(f,threading.Lock()))
         thread_list.append(t)
         t.start()
